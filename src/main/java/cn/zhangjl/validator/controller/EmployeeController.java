@@ -1,6 +1,6 @@
 package cn.zhangjl.validator.controller;
 
-import cn.zhangjl.validator.entity.Department;
+import cn.zhangjl.validator.entity.Employee;
 import cn.zhangjl.validator.vo.ResultVo;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,20 +13,18 @@ import javax.validation.Valid;
 /**
  * @author zhangjl
  * @description
- * @className DepartmentController
- * @date 2020/5/23 14:35
+ * @className EmployeeController
+ * @date 2020/5/23 下午10:06
  */
-//对类中的方法开启验证功能
 @Validated
 @RestController
-@RequestMapping("/department")
-public class DepartmentController {
+@RequestMapping("/employee")
+public class EmployeeController {
 
 
     @PostMapping
-    public ResultVo add(@RequestBody @Valid Department department) {
+    public ResultVo add(@RequestBody @Valid Employee employee) {
         return ResultVo.success();
     }
-
 
 }
