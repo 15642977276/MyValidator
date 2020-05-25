@@ -1,5 +1,9 @@
 # Validator
 
+该文档和源码通过B站 https://www.bilibili.com/video/BV1UE411t7BZ 学习而来。UP主UID：51950540
+
+
+
 #### 主要的验证方式 
 
 1. ##### 传统的参数校验方式 （if else，这个没啥可说的）
@@ -9,6 +13,10 @@
 2. ##### 开始使用validator
 
    在验证的类上加 **@Validated** 注解，在需要校验的地方加常用的 **@NotNull** 等,注意，这些注解不是只可以放在类的属性中，也可以针对单个参数进行校验，也可以对返回值进行校验！
+
+   有两个需要注意的地方，一些其他的注解不会对null值进行校验， 例如**@Size**，如果传入null值可以通过校验，这里需要同时加上**@NotNull**进行非空的校验。为什么是这样，因为源码中写的，自定义注解可以控制
+
+   同一个注解，可以对多个类型的参数进行校验，如**@Size**可以对List和String等进行校验，因为每一个注解所支持的验证的类型，都有一个注解的具体实现类类进行处理
 
    ```java
    //单个属性的校验和返回值校验
@@ -137,7 +145,53 @@
 
 6. ##### 自定义注解
 
-   
+   场景举例：
+
+   	1. 对于Integer而言，必须是3的倍数
+    	2. 对于List而言，list中的元素个数，必须是3的倍数
+    	3. 自定义注解实现 3 的倍数的校验，该注解支持两种数据类型，Integer和List
+
+   实现步骤：
+
+   1. 自定义注解,可以直接参照其他的注解创建
+
+      ```java
+      @Target({FIELD})
+      @Retention(RUNTIME)
+      @Documented
+      @Constraint(validatedBy = {MultipleOfThreeForInteger.class, MultipleOfThreeForList.class})
+      public @interface MultipleOfThree {
+      
+          String message() default "必须是3的倍数";
+      
+          Class<?>[] groups() default {};
+      
+          Class<? extends Payload>[] payload() default {};
+      
+      }
+      ```
+
+   2. 编写实现类，具体的实现，需要实现ConstraintValidator接口，泛型参数1为定义的注解，泛型参数二为对什么属性进行校验
+
+      ```
+      public class MultipleOfThreeForInteger implements ConstraintValidator<MultipleOfThree, Integer> {
+      
+          @Override
+          public void initialize(MultipleOfThree constraintAnnotation) {
+          }
+      
+          @Override
+          public boolean isValid(Integer value, ConstraintValidatorContext context) {
+              //不对null的值生效， 这个是默认的根据其他的规则来的，可以自己去进行定义，这样不容易搞乱
+              if (value == null) {
+                  return true;
+              }
+              return value % 3 == 0;
+          }
+      }
+      ```
+
+   3. 
 
 7. ##### List中做分组校验
 

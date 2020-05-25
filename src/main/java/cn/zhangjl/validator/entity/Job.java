@@ -1,5 +1,6 @@
 package cn.zhangjl.validator.entity;
 
+import cn.zhangjl.validator.validation.MultipleOfThree;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -18,6 +19,7 @@ public class Job {
     /**
      * 主键ID
      */
+    @MultipleOfThree
     private Integer id;
 
     /**
@@ -25,12 +27,12 @@ public class Job {
      */
     @Size(min = 1)
     private String name;
-    
 
     /**
      * 标签
      */
     @NotNull
     @Size(min = 1)
+    @MultipleOfThree
     private List<String> lables;
 }
